@@ -1,0 +1,10 @@
+{
+  "cSpell.words": [
+    "colour",
+    "generatecanvas",
+    "mandelbrotplot",
+    "mandelbrotvalues",
+    "realaxis"
+  ],
+  "dotnet.defaultSolution": "rockpaperscissors.sln"
+}
