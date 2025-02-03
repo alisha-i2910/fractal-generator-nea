@@ -1,6 +1,14 @@
 import React, {useEffect, useRef} from 'react';
 import App from '../../App';
 
+const colours = [
+  '#ff6600', '#ffcc00', '#ffff00', '#ccff33', '#99ff66',
+  '#66ff99', '#33ffcc', '#00ffff', '#00ccff', '#0066ff',
+  '#0033cc', '#3300cc', '#6600cc', '#9900ff', '#cc00ff',
+  '#9900cc', '#660099', '#330066', '#1a0033', '#000000'
+];
+const numberofcolours = colours.length;
+
 //note: set as x and y so mandelbrot.plot.apply(null, c) can be used - null for no context
 export function mandelbrotvalues(x, y, context) {
   
@@ -31,38 +39,21 @@ export function mandelbrotvalues(x, y, context) {
     //taking out math.sqrt, as this helps computation power
     const z_absolute = z_real * z_real + z_imaginary * z_imaginary;
 
-    //if condition - white as a temp colour
+  
+    //once the condition to be in the set is met, colour-code
     if (z_absolute > 4) {
-      finished = true;
-      colour = 'black';
-      break;
+      let indexofcolour = Math.min(numberofcolours - 1, Math.floor((b / iterationlimit) * numberofcolours))
+      colour = colours[indexofcolour]
     }
   }
-
-  //Now we know whether the point is in the set.
-  //Depending on the number of iterations to get to it, we colour-code..
-
-  if (b > (iterationlimit * 0.33333333) && finished == true)
-    {
-        colour = 'black';
-    }
-    if (b > (iterationlimit * 0.66666666) && finished == true)
-        {
-            colour = 'blue';
-        }
-        if (b > (iterationlimit * 0.99999999) && finished == true)
-            {
-                colour = 'purple';
-            }
-
   //If not in the set..
-  if (!finished)
+  if (colour === null)
     {
         colour = 'grey';
     }
 
   //scaling attempts
-  const height = 900  
+  const height = 900;
   const width = 900; 
 
   x = ((x + 2) * 0.25) * width;
@@ -76,8 +67,6 @@ export function mandelbrotvalues(x, y, context) {
   context.translate(0,0);
   return colour;
 }
-
-
 
 
 //additions to be made:

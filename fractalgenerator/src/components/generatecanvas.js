@@ -1,6 +1,7 @@
 //Update below for every hook used
 import React, {useEffect, useRef} from 'react';
 import { mandelbrotvalues } from './mandelbrot/mandelbrotvalues';
+import { hovercoordinates } from './hovercoordinates'
 
 export function Canvas()
 {
@@ -28,9 +29,9 @@ export function Canvas()
 
         //a for loop to go through every combination of x and y values
         //we use -2=>2 as the standard range for the mandelbrot set
-        for (let x = -2; x <= 2; x+=0.01)
+        for (let x = -2; x <= 2; x+=0.007)
         {
-            for (let y = -2; y <= 2; y+=0.01)
+            for (let y = -2; y <= 2; y+=0.007)
             {
                 const graphX = x
                 const graphY = y
@@ -39,6 +40,17 @@ export function Canvas()
         }
 
         //below, this function runs when width or height changes
+
+        //events!?
+
+        const hoverevent = (event) => {
+            hovercoordinates(event);
+        }
+
+        //attach and cleanup for mouse hover
+        canvas.addEventListener('mousemove', hoverevent);
+        canvas.addEventListener('mousemove', hoverevent);
+
     }, [width, height] );
 
     return(
@@ -46,11 +58,7 @@ export function Canvas()
         ref={canvasReference}
         width={width}
         height={height}
+        onMouseMove={onMoveEvent}
     />
     );
 }
-//notes:
-//Study:
-//1. references, how they update, and when to update them
-//2. diff between " and ' in html/jsx
-//3. why does useEffect need ()=> notation?
