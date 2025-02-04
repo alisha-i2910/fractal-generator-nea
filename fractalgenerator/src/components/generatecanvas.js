@@ -1,15 +1,13 @@
 //Update below for every hook used
 import React, {useEffect, useRef} from 'react';
 import { mandelbrotvalues } from './mandelbrot/mandelbrotvalues';
-import { hovercoordinates } from './hovercoordinates'
 
-export function Canvas()
+export function Canvas({hoverEvent})
 {
     //making a reference
     const canvasReference=useRef(null);
 
     //assigning width and height based on the screen dimensions
-    // TEMPORARILY, SET TO 300x300
     const width=900;
     const height=900;
 
@@ -29,9 +27,9 @@ export function Canvas()
 
         //a for loop to go through every combination of x and y values
         //we use -2=>2 as the standard range for the mandelbrot set
-        for (let x = -2; x <= 2; x+=0.007)
+        for (let x = -2; x <= 2; x+=0.004)
         {
-            for (let y = -2; y <= 2; y+=0.007)
+            for (let y = -2; y <= 2; y+=0.004)
             {
                 const graphX = x
                 const graphY = y
@@ -39,26 +37,21 @@ export function Canvas()
             }
         }
 
-        //below, this function runs when width or height changes
-
         //events!?
-
-        const hoverevent = (event) => {
-            hovercoordinates(event);
-        }
-
         //attach and cleanup for mouse hover
-        canvas.addEventListener('mousemove', hoverevent);
-        canvas.addEventListener('mousemove', hoverevent);
+        canvas.addEventListener('mousemove', hoverEvent);
+        return () => {
+            canvas.removeEventListener('mousemove', hoverEvent);
+          };
 
-    }, [width, height] );
+    }, [width, height, hoverEvent] );
 
     return(
     <canvas
         ref={canvasReference}
         width={width}
         height={height}
-        onMouseMove={onMoveEvent}
+        onMouseMove={hoverEvent}
     />
     );
 }

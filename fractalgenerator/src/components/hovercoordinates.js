@@ -1,5 +1,6 @@
 import '../styles/App.css'
 export function hovercoordinates(event)
+
 {
     //retrieving cursor position via canvas
     const canvas = event.target;
@@ -20,9 +21,4 @@ export function hovercoordinates(event)
 
     //outputting x y coord
     console.log("ur actual x is " + x + " ur actual y is " + y)
-
-    if (callback) {
-        callback({ x, y });
-    }
-
 }

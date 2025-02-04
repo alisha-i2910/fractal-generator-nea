@@ -2,11 +2,27 @@ import React, {useEffect, useRef} from 'react';
 import App from '../../App';
 
 const colours = [
-  '#ff6600', '#ffcc00', '#ffff00', '#ccff33', '#99ff66',
-  '#66ff99', '#33ffcc', '#00ffff', '#00ccff', '#0066ff',
-  '#0033cc', '#3300cc', '#6600cc', '#9900ff', '#cc00ff',
-  '#9900cc', '#660099', '#330066', '#1a0033', '#000000'
+  '#000033', '#000046', '#000059', '#00006d', '#000080',
+  '#000099', '#0000b3', '#0000cc', '#0000e6', '#0000ff',
+  '#0d1aff', '#1a33ff', '#264dff', '#3366ff', '#407fff',
+  '#4d99ff', '#59b2ff', '#66ccff', '#73e6ff', '#80ffff',
+  '#80e6e6', '#80cccc', '#80b3b3', '#809999', '#808080',
+  '#809999', '#80b3b3', '#80cccc', '#80e6e6', '#80ffff',
+  '#99ffff', '#b3ffff', '#ccffff', '#e6ffff', '#ffffe6',
+  '#ffffcc', '#ffffb3', '#ffff99', '#ffff80', '#ffff66',
+  '#fffa4d', '#fff533', '#ffee1a', '#ffe800', '#ffe000',
+  '#ffd900', '#ffd200', '#ffcc00', '#ffc500', '#ffbf00',
+  '#ffb800', '#ffb200', '#ffab00', '#ffa500', '#ff9e00',
+  '#ff9800', '#ff9100', '#ff8b00', '#ff8400', '#ff7e00',
+  '#ff7700', '#ff7100', '#ff6a00', '#ff6400', '#ff5d00',
+  '#ff5700', '#ff5000', '#ff4a00', '#ff4300', '#ff3d00',
+  '#ff3600', '#ff3000', '#ff2900', '#ff2300', '#ff1c00',
+  '#ff1600', '#ff0f00', '#ff0900', '#ff0200', '#f90000',
+  '#f20000', '#eb0000', '#e50000', '#de0000', '#d80000',
+  '#d10000', '#cb0000', '#c40000', '#be0000', '#b70000',
+  '#b10000', '#aa0000', '#a40000', '#9d0000', '#970000'
 ];
+
 const numberofcolours = colours.length;
 
 //note: set as x and y so mandelbrot.plot.apply(null, c) can be used - null for no context
@@ -49,7 +65,7 @@ export function mandelbrotvalues(x, y, context) {
   //If not in the set..
   if (colour === null)
     {
-        colour = 'grey';
+        colour = 'black';
     }
 
   //scaling attempts

@@ -7,5 +7,5 @@ import App from './App';
   const container = document.getElementById('app');
   const root = ReactDOM.createRoot(container);
 
-  //rendering the blank canvas
+  //rendering the app
   root.render(< App/>);
