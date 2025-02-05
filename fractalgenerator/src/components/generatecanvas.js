@@ -20,15 +20,15 @@ export const Canvas = forwardRef(function Canvas({ hoverEvent }, ref) {
     context.fillRect(0, 0, width, height);
 
     // Plot the fractal. (Using x and y values from -2 to 2)
-    for (let x = -2; x <= 2; x += 0.004) {
-      for (let y = -2; y <= 2; y += 0.004) {
+    for (let x = -2; x <= 2; x += 0.007) {
+      for (let y = -2; y <= 2; y += 0.007) {
         mandelbrotvalues(x, y, context);
       }
     }
 
     // Remove the addEventListener code. We'll rely on the onMouseMove prop.
     // (If you want to use addEventListener instead, comment out the onMouseMove prop below.)
-  }, [width, height, hoverEvent, canvasRef]);
+  }, [width, height, canvasRef]);
 
   return (
     <canvas
