@@ -1,57 +1,42 @@
-//Update below for every hook used
-import React, {useEffect, useRef} from 'react';
+import React, { useEffect, useRef, forwardRef } from 'react';
 import { mandelbrotvalues } from './mandelbrot/mandelbrotvalues';
 
-export function Canvas({hoverEvent})
-{
-    //making a reference
-    const canvasReference=useRef(null);
+export const Canvas = forwardRef(function Canvas({ hoverEvent }, ref) {
+  // Always create a local ref first.
+  const localRef = useRef(null);
+  // Use the forwarded ref if provided; otherwise, use the local ref.
+  const canvasRef = ref || localRef;
 
-    //assigning width and height based on the screen dimensions
-    const width=900;
-    const height=900;
+  const width = 900;
+  const height = 900;
 
-    useEffect(() => {
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return; // Safety check
 
-        //getting the current canvas reference
-        const canvas=canvasReference.current;
+    const context = canvas.getContext('2d');
+    // Fill the canvas black
+    context.fillStyle = 'black';
+    context.fillRect(0, 0, width, height);
 
-        //getting canvas context
-        const context=canvas.getContext('2d');
+    // Plot the fractal. (Using x and y values from -2 to 2)
+    for (let x = -2; x <= 2; x += 0.004) {
+      for (let y = -2; y <= 2; y += 0.004) {
+        mandelbrotvalues(x, y, context);
+      }
+    }
 
-        //filling canvas black
-        context.fillStyle='black';
-        context.fillRect(0, 0, width, height);
+    // Remove the addEventListener code. We'll rely on the onMouseMove prop.
+    // (If you want to use addEventListener instead, comment out the onMouseMove prop below.)
+  }, [width, height, hoverEvent, canvasRef]);
 
-        //onto the fractal plotting
-
-        //a for loop to go through every combination of x and y values
-        //we use -2=>2 as the standard range for the mandelbrot set
-        for (let x = -2; x <= 2; x+=0.004)
-        {
-            for (let y = -2; y <= 2; y+=0.004)
-            {
-                const graphX = x
-                const graphY = y
-                mandelbrotvalues(graphX, graphY, context);
-            }
-        }
-
-        //events!?
-        //attach and cleanup for mouse hover
-        canvas.addEventListener('mousemove', hoverEvent);
-        return () => {
-            canvas.removeEventListener('mousemove', hoverEvent);
-          };
-
-    }, [width, height, hoverEvent] );
-
-    return(
+  return (
     <canvas
-        ref={canvasReference}
-        width={width}
-        height={height}
-        onMouseMove={hoverEvent}
+      ref={canvasRef}
+      width={width}
+      height={height}
+      onMouseMove={hoverEvent}  // This will trigger hoverEvent on mouse movement.
+      style={{ border: '1px solid black' }} // Optional: makes the canvas visible.
     />
-    );
-}
+  );
+});
