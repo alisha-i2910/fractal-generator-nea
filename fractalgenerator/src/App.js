@@ -24,7 +24,7 @@ function App() {
     const xcanvas = event.clientX - rect.left;
     const ycanvas = event.clientY - rect.top;
     const x = (xcanvas / (900 * 0.25)) - 2;
-    const y = (ycanvas / (900 * 0.25)) - 2;
+    const y = -1 * ((ycanvas / (900 * 0.25)) - 2);
     setX(x);
     setY(y);
     console.log("hoverEvent triggered!"); 

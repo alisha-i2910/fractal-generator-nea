@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from 'react';
-import App from '../../App';
+import App from '../src/App';
 
 const colours = [
   '#000033', '#000046', '#000059', '#00006d', '#000080',
@@ -76,6 +76,9 @@ export function mandelbrotvalues(x, y, context) {
   y = ((y + 2) * 0.25) * height;
   context.fillStyle = colour;
   context.fillRect(x, y, 1, 1);
+  //also, to mirror this across:
+
+  //context.fillRect(x, height - y, 1, 1)
   const image = document.getElementById('app');
   //context.drawImage(image, x, y, 1, 1,);
 

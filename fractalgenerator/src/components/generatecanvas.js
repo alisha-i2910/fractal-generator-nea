@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, forwardRef } from 'react';
-import { mandelbrotvalues } from './mandelbrot/mandelbrotvalues';
 
 export const Canvas = forwardRef(function Canvas({ hoverEvent }, ref) {
   // Always create a local ref first.
@@ -20,11 +19,28 @@ export const Canvas = forwardRef(function Canvas({ hoverEvent }, ref) {
     context.fillRect(0, 0, width, height);
 
     // Plot the fractal. (Using x and y values from -2 to 2)
-    for (let x = -2; x <= 2; x += 0.007) {
-      for (let y = -2; y <= 2; y += 0.007) {
-        mandelbrotvalues(x, y, context);
-      }
+
+
+    // using offscreen canvas
+    //const worker = new Worker('worker.js')
+    //const worker = new Worker('../public/worker.js');
+    const worker = new Worker("/worker.js")
+
+    worker.onmessage = (event) => {
+        console.log("message received from worker")
+        const bitmap = event.data();
+        //dont think i have to get context again, but incase
+        const context = canvas.getContext('2d');
+        context.transferFromImageBitmap(bitmap)
     }
+    worker.postMessage({
+        msg: 'start'
+    })
+    //for (let x = -0.296266496; x <= -0.04103637; x += 0.000001) {
+      //for (let y = -1.144029611; y <=-0.957032508; y += 0.000001) {
+        //mandelbrotvalues(x, y, context);
+      //}
+   // }
 
     // Remove the addEventListener code. We'll rely on the onMouseMove prop.
     // (If you want to use addEventListener instead, comment out the onMouseMove prop below.)
