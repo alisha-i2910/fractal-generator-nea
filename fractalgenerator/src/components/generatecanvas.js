@@ -1,13 +1,24 @@
-import React, { useEffect, useRef, forwardRef } from 'react';
+import React, { useEffect, useRef, forwardRef, useContext } from 'react';
+import '../styles/App.css'
+import {sidebarstate} from './sidebar'
 
-export const Canvas = forwardRef(function Canvas({ hoverEvent }, ref) {
-  // Always create a local ref first.
+export const Canvas = forwardRef(function Canvas({ hoverEvent, setrendering }, ref) {
+
+  const {iterationlimit} = useContext(sidebarstate);
+  const {resolution} = useContext(sidebarstate);
+  const {colour1} = useContext(sidebarstate);
+  const {colour2} = useContext(sidebarstate);
+  const {colour3} = useContext(sidebarstate);
+  const {colour4} = useContext(sidebarstate);
+  const {colour5} = useContext(sidebarstate);
+  
+  
   const localRef = useRef(null);
-  // Use the forwarded ref if provided; otherwise, use the local ref.
+  // use the forwarded ref if provided - otherwise, use the local ref.
   const canvasRef = ref || localRef;
 
-  const width = 900;
-  const height = 900;
+  const height = 862;
+  const width = 1300;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -18,41 +29,40 @@ export const Canvas = forwardRef(function Canvas({ hoverEvent }, ref) {
     context.fillStyle = 'black';
     context.fillRect(0, 0, width, height);
 
-    // Plot the fractal. (Using x and y values from -2 to 2)
+    //when we switch between resolutions, we need to switch between workers
+    let active = true;
 
+    const worker = new Worker(new URL('./worker.js', import.meta.url))
 
-    // using offscreen canvas
-    //const worker = new Worker('worker.js')
-    //const worker = new Worker('../public/worker.js');
-    const worker = new Worker("/worker.js")
-
-    worker.onmessage = (event) => {
-        console.log("message received from worker")
-        const bitmap = event.data();
-        //dont think i have to get context again, but incase
-        const context = canvas.getContext('2d');
-        context.transferFromImageBitmap(bitmap)
-    }
+    setrendering(true);
     worker.postMessage({
-        msg: 'start'
+        question: 'wheres my fractal',
+        iterationlimit: iterationlimit,
+        resolution: Number(resolution) || 0.004,
+        colours: [colour1, colour2, colour3, colour4, colour5]
     })
-    //for (let x = -0.296266496; x <= -0.04103637; x += 0.000001) {
-      //for (let y = -1.144029611; y <=-0.957032508; y += 0.000001) {
-        //mandelbrotvalues(x, y, context);
-      //}
-   // }
+    worker.onmessage = ({ data: { answer } }) => {
+      if (active){
+        const context = canvas.getContext('2d');
+        context.drawImage(answer, 0, 0);
+        setrendering(false);
+      }
+      };
+      return () => {
+        active = false; //workers now inactive
+        worker.terminate(); // so kill it
+        setrendering(false);
+      };
 
-    // Remove the addEventListener code. We'll rely on the onMouseMove prop.
-    // (If you want to use addEventListener instead, comment out the onMouseMove prop below.)
-  }, [width, height, canvasRef]);
+  }, [canvasRef, iterationlimit, resolution, colour1, colour2, colour3, colour4, colour5]);
 
   return (
     <canvas
+    className="canvas"
       ref={canvasRef}
       width={width}
       height={height}
-      onMouseMove={hoverEvent}  // This will trigger hoverEvent on mouse movement.
-      style={{ border: '1px solid black' }} // Optional: makes the canvas visible.
+      onMouseMove={hoverEvent}  // trigger hoverEvent on mouse movement.
     />
   );
 });

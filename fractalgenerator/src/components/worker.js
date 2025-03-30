@@ -1,25 +1,30 @@
-import {mandelbrotvalues} from '../src/mandelbrotvalues'
+import React, {useContext} from 'react';
+import {mandelbrotvalues} from './mandelbrotvalues'
+import { generatecolourarray } from './hexcolourarray';
 
-const height = 900;
-const width = 900;
+onmessage = ({ data: { question, iterationlimit, resolution, colours} }) => {
 
-onmessage = (event) => {
-    switch(event.data.msg){
-        case 'start':
-            const offscreencanvas = new OffscreenCanvas(height, width)
-            const offscreencontext = offscreencanvas.getContext('2d')
+    const height = 862;
+    const width = 1300;
 
-            for (let x = -2; x <= 2; x += 0.004) {
-                for (let y = -2; y <=-2; y += 0.004) {
-                  mandelbrotvalues(x, y, offscreencontext);
-                }
-            }
+    const ofscanvas = new OffscreenCanvas(width, height)
+    const ofscontext = ofscanvas.getContext('2d')
 
-            const bitmap = offscreencanvas.transferToImageBitmap()
-            postMessage(bitmap);
-            break;
-        
-        default:
-            break;
+    ofscontext.fillStyle = 'black';
+    ofscontext.fillRect(0, 0, width, height);
+
+    const colourarray = generatecolourarray(colours);
+
+    const step = (typeof resolution === 'number' && resolution > 0) ? resolution : 0.004;
+    for (let x = -2; x <= 2; x += step) {
+        for (let y = -2; y <=2; y += step) {
+          mandelbrotvalues(x, y, ofscontext, iterationlimit, colourarray);
+        }
     }
-}
+
+    const bitmap = ofscanvas.transferToImageBitmap();
+
+  postMessage({
+    answer: bitmap,
+  });
+};
